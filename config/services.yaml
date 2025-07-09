@@ -7,11 +7,7 @@ parameters:
     locale: 'en'
     app.notifications.email_sender: admin@localhost
     api_media_base_url: '%env(API_MEDIA_BASE_URL)%'
-    uploads_directory: '%kernel.project_dir%/public/uploads'
-    uploadAbsoluteDir: '%kernel.project_dir%/public/%uploadDir%'
-    logo_directory: '%kernel.project_dir%/public/uploads/companies/logo'
-    resume_directory: '%kernel.project_dir%/public/uploads/resume'
-    uploadDir: 'uploads'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -22,8 +18,6 @@ services:
             $projectDirectory: '%kernel.project_dir%'
             $environment: '%kernel.environment%'
             $kernelEnvironment: '%kernel.environment%'
-            $uploadDir: '%uploadDir%'
-            $uploadAbsoluteDir: '%uploadAbsoluteDir%'
             $locale: '%locale%'
             $databaseHealthHistoryDays: '%env(int:DATABASE_HEALTH_HISTORY_DAYS)%'
             $databaseLogLoginHistoryDays: '%env(int:DATABASE_LOG_LOGIN_HISTORY_DAYS)%'
@@ -120,22 +114,6 @@ services:
             $apiMediaBaseUrl: '%api_media_base_url%'
     League\Flysystem\FilesystemOperator: '@default.storage'
 
-    App\Resume\Domain\EntityListener\:
-        resource: '../src/Resume/Domain/EntityListener'
-        tags: [ 'doctrine.orm.entity_listener' ]
-
-    App\Resume\Transport\Form\Type\IconChoiceType:
-        class: App\Resume\Transport\Form\Type\IconChoiceType
-        # Symfony has already a container parameter to the kernel root directory.
-        arguments: [ '%kernel.project_dir%' ]
-        tags:
-            - { name: form.type }
-    App\Job\Application\Service\CompanyService:
-        arguments:
-            $logoCompanyDirectory: '%logo_directory%'
-    App\Job\Application\Service\ResumeService:
-        arguments:
-            $resumeDirectory: '%resume_directory%'
 when@dev:
     services:
         _defaults:

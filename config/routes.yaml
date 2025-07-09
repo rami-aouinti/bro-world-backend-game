@@ -1,15 +1,7 @@
-job-controllers:
+configuration-controllers:
     resource:
-        path: ../src/Job/Transport/Controller/Api/
-        namespace: App\Job\Transport\Controller\Api
-    type: attribute
-    prefix: /api
-    defaults:
-        _format: json
-resume-controllers:
-    resource:
-        path: ../src/Resume/Transport/Controller/Api/
-        namespace: App\Resume\Transport\Controller\Api
+        path: ../src/Configuration/Transport/Controller/Api/
+        namespace: App\Configuration\Transport\Controller\Api
     type: attribute
     prefix: /api
     defaults:
