@@ -11,6 +11,7 @@ use App\General\Domain\Utils\JSON;
 use App\Configuration\Domain\Entity\Configuration;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\NotSupported;
 use Exception;
 use JsonException;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -18,6 +19,8 @@ use OpenApi\Attributes as OA;
 use OpenApi\Attributes\JsonContent;
 use App\General\Infrastructure\ValueObject\SymfonyUser;
 use OpenApi\Attributes\Property;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,63 +38,30 @@ readonly class PostConfigurationController
     public function __construct(
         private SerializerInterface $serializer,
         private EntityManagerInterface $entityManager,
-        private ConfigurationRepositoryInterface $repository
+        private ConfigurationRepositoryInterface $repository,
+        private CacheItemPoolInterface $cache
     ) {
     }
 
     /**
      * Get current user Configuration data, accessible only for 'IS_AUTHENTICATED_FULLY' users.
      *
+     * @param SymfonyUser $symfonyUser
+     * @param Request $request
+     * @return JsonResponse
      * @throws JsonException
-     * @throws Exception
+     * @throws NotSupported
+     * @throws InvalidArgumentException
      */
     #[Route(
         path: '/v1/platform/configuration',
         methods: [Request::METHOD_POST],
     )]
-    #[OA\Response(
-        response: 200,
-        description: 'Configuration data',
-        content: new JsonContent(
-            ref: new Model(
-                type: Configuration::class,
-                groups: ['Configuration'],
-            ),
-            type: 'object',
-        ),
-    )]
-    #[OA\Response(
-        response: 401,
-        description: 'Invalid token (not found or expired)',
-        content: new JsonContent(
-            properties: [
-                new Property(property: 'code', description: 'Error code', type: 'integer'),
-                new Property(property: 'message', description: 'Error description', type: 'string'),
-            ],
-            type: 'object',
-            example: [
-                'code' => 401,
-                'message' => 'JWT Token not found',
-            ],
-        ),
-    )]
-    #[OA\Response(
-        response: 403,
-        description: 'Access denied',
-        content: new JsonContent(
-            properties: [
-                new Property(property: 'code', description: 'Error code', type: 'integer'),
-                new Property(property: 'message', description: 'Error description', type: 'string'),
-            ],
-            type: 'object',
-            example: [
-                'code' => 403,
-                'message' => 'Access denied',
-            ],
-        ),
-    )]
     public function __invoke(SymfonyUser $symfonyUser, Request $request): JsonResponse
     {
+        $cacheKey = "configurations";
+        $this->cache->deleteItem($cacheKey);
+
         $configuration = $this->repository->findOneBy([
             'configurationKey' => $request->request->get('configurationKey'),
             'userId' => $symfonyUser->getUserIdentifier()
