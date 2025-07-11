@@ -12,6 +12,8 @@ use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Property;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -27,14 +29,18 @@ readonly class DeleteConfigurationController
 {
     public function __construct(
         private SerializerInterface $serializer,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private CacheItemPoolInterface $cache
     ) {
     }
 
     /**
      * Get current user Configuration data, accessible only for 'IS_AUTHENTICATED_FULLY' users.
      *
+     * @param Configuration $configuration
+     * @return JsonResponse
      * @throws JsonException
+     * @throws InvalidArgumentException
      */
     #[Route(
         path: '/v1/admin/configuration/{configuration}',
@@ -42,6 +48,9 @@ readonly class DeleteConfigurationController
     )]
     public function __invoke(Configuration $configuration): JsonResponse
     {
+        $cacheKey = "system_configurations";
+        $this->cache->deleteItem($cacheKey);
+
         $this->entityManager->remove($configuration);
         $this->entityManager->flush();
 

@@ -59,7 +59,7 @@ readonly class PostConfigurationController
     )]
     public function __invoke(SymfonyUser $symfonyUser, Request $request): JsonResponse
     {
-        $cacheKey = "configurations";
+        $cacheKey = "configurations_" . $symfonyUser->getUserIdentifier();
         $this->cache->deleteItem($cacheKey);
 
         $configuration = $this->repository->findOneBy([
