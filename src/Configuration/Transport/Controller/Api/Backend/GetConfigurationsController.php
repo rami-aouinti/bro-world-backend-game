@@ -54,12 +54,16 @@ readonly class GetConfigurationsController
     )]
     public function __invoke(SymfonyUser $symfonyUser): JsonResponse
     {
+        $configs = $this->repository->findAll();
+
+        $filtered = array_filter($configs, static function ($config) {
+            return in_array(FlagType::PROTECTED_SYSTEM->value, $config->getFlags(), true);
+        });
+
         /** @var array<string, string|array<string, string>> $output */
         $output = JSON::decode(
             $this->serializer->serialize(
-                $this->repository->findBy([
-                    'flagType' => FlagType::PROTECTED_SYSTEM,
-                ]),
+                $filtered,
                 'json',
                 [
                     'groups' => 'Configuration',
