@@ -57,7 +57,9 @@ readonly class GetConfigurationsController
         /** @var array<string, string|array<string, string>> $output */
         $output = JSON::decode(
             $this->serializer->serialize(
-                $this->repository->findAll(),
+                $this->repository->findBy([
+                    'flagType' => FlagType::PROTECTED_SYSTEM,
+                ]),
                 'json',
                 [
                     'groups' => 'Configuration',
