@@ -56,10 +56,8 @@ readonly class GetLeaderboardController
         usort($leaderboard, static fn($a, $b) => $b['score'] <=> $a['score']);
 
         return new JsonResponse([
-            'count' => count($scores),
-            'first_score_user' => $scores[0]?->getUser()?->toString(),
-            'has_game' => $scores[0]?->getGame() !== null,
-            'has_questions' => count($scores[0]?->getGame()?->getGameQuestions() ?? []) > 0,
+            'count' => count($leaderboard),
+            'leaderboard' => $leaderboard,
         ], Response::HTTP_OK);
 
     }
