@@ -18,7 +18,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class TriviaFixtures extends Fixture
 {
     private const array LEVELS = ['easy', 'medium'];
-    private const int QUESTIONS_PER_COMBO = 50;
+    private const int QUESTIONS_PER_COMBO = 20;
 
     /**
      * @throws ServerExceptionInterface
