@@ -51,19 +51,16 @@ readonly class SubmitScoreController
                 continue;
             }
 
-            /** @var Question|null $question */
             $question = $this->em->getRepository(Question::class)->find(Uuid::fromString($questionId));
-
             if (!$question) {
                 continue;
             }
 
             $gameQuestion = new GameQuestion();
             $gameQuestion->setQuestion($question);
-            $gameQuestion->setIsResponse((bool) $isCorrect);
-            $gameQuestion->setGame($game);
-            // Ajoute proprement la relation bidirectionnelle
-            $game->addGameQuestion($gameQuestion);
+            $gameQuestion->setIsResponse((bool)$isCorrect);
+
+            $game->addGameQuestion($gameQuestion); // ça gère aussi le setGame()
 
             $this->em->persist($gameQuestion);
         }

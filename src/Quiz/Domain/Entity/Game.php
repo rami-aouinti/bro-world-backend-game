@@ -91,7 +91,7 @@ class Game implements EntityInterface
     {
         if (!$this->gameQuestions->contains($gameQuestion)) {
             $this->gameQuestions[] = $gameQuestion;
-            $gameQuestion->setGame($this);
+            $gameQuestion->setGame($this); // important !
         }
 
         return $this;
