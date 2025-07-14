@@ -34,7 +34,7 @@ class Game implements EntityInterface
     private UuidInterface $id;
 
 
-    #[ORM\OneToOne(inversedBy: 'game_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'game', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups([
         'Game',
