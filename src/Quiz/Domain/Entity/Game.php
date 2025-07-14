@@ -40,7 +40,7 @@ class Game implements EntityInterface
     #[ORM\OneToOne(mappedBy: 'game', targetEntity: Score::class, cascade: ['persist', 'remove'])]
     private ?Score $score = null;
 
-    #[ORM\OneToMany(mappedBy: 'Game', targetEntity: GameQuestion::class)]
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: GameQuestion::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups([
         'Game',
         'Game.gameQuestions',
