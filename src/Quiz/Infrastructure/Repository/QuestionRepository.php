@@ -6,6 +6,7 @@ use App\Quiz\Domain\Entity\Category;
 use App\Quiz\Domain\Entity\Level;
 use App\Quiz\Domain\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,15 +42,36 @@ class QuestionRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function findRandomByCategoryAndLevel(Category $category, Level $level, int $limit = 10): array
     {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT q.id
+        FROM question q
+        WHERE q.category_id = :category
+        AND q.level_id = :level
+        ORDER BY RANDOM()
+        LIMIT :limit
+    ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('category', $category->getId());
+        $stmt->bindValue('level', $level->getId());
+        $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
+
+        $questionIds = $stmt->executeQuery()->fetchFirstColumn();
+
+        if (empty($questionIds)) {
+            return [];
+        }
+
         return $this->createQueryBuilder('q')
-            ->andWhere('q.category = :category')
-            ->andWhere('q.level = :level')
-            ->setParameter('category', $category)
-            ->setParameter('level', $level)
-            ->orderBy('RAND()') // MySQL. Pour PostgreSQL, remplacer par "RANDOM()"
-            ->setMaxResults($limit)
+            ->where('q.id IN (:ids)')
+            ->setParameter('ids', $questionIds)
             ->getQuery()
             ->getResult();
     }
