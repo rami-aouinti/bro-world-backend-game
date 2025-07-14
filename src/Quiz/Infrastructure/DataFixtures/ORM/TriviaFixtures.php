@@ -38,7 +38,7 @@ class TriviaFixtures extends Fixture
                 $category = $this->getOrCreateCategory($manager, $categoryName);
 
                 try {
-                    $url = sprintf('https://opentdb.com/api.php?amount=%d&category=%d&difficulty=%s&type=multiple', self::QUESTIONS_PER_COMBO, $apiCategoryId, $difficulty);
+                    $url = sprintf('https://opentdb.com/api.php?amount=%d&category=%d&difficulty=%s', self::QUESTIONS_PER_COMBO, $apiCategoryId, $difficulty);
                     $response = $client->request('GET', $url);
                     $data = $response->toArray();
 
@@ -67,7 +67,7 @@ class TriviaFixtures extends Fixture
                         }
                     }
 
-                    sleep(3); // délai léger pour éviter le rate limit
+                    sleep(5); // délai léger pour éviter le rate limit
 
                 } catch (TransportExceptionInterface $e) {
                     echo "Erreur HTTP : " . $e->getMessage();
