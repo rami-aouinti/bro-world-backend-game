@@ -8,6 +8,7 @@ use App\Quiz\Domain\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Question>
