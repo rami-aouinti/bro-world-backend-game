@@ -9,6 +9,7 @@ use App\Quiz\Infrastructure\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use OpenApi\Attributes as OA;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,8 +42,8 @@ readonly class QuizController
         $categoryId = $request->query->get('category');
         $levelId = $request->query->get('level');
 
-        $category = $this->em->getRepository(Category::class)->find($categoryId);
-        $level = $this->em->getRepository(Level::class)->find($levelId);
+        $category = $this->em->getRepository(Category::class)->find(Uuid::fromString($categoryId));
+        $level = $this->em->getRepository(Level::class)->find(Uuid::fromString($levelId));
 
         if (!$category || !$level) {
             return new JsonResponse([
