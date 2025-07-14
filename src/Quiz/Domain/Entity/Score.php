@@ -48,7 +48,6 @@ class Score implements EntityInterface
         'Score',
         'Score.game',
     ])]
-    #[ORM\JoinColumn(name: "score_id", referencedColumnName: "id")]
     private ?Game $game = null;
 
     #[ORM\Column(type: 'uuid')]
