@@ -45,7 +45,7 @@ class Question implements EntityInterface
     ])]
     private ?string $question = null;
 
-    #[ORM\OneToMany(mappedBy: 'question_id', targetEntity: Answer::class)]
+    #[ORM\OneToMany(mappedBy: 'questionId', targetEntity: Answer::class, cascade: ['remove'], orphanRemoval: true)]
     #[Groups([
         'Question',
         'Question.answer',

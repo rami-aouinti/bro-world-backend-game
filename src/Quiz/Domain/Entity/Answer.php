@@ -50,8 +50,8 @@ class Answer implements EntityInterface
     ])]
     private ?bool $isTrue = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Answer')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'answers')]
+    #[ORM\JoinColumn(name: 'question_id_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Groups([
         'Answer',
         'Answer.question_id',
