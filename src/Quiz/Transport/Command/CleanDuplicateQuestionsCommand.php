@@ -39,6 +39,12 @@ class CleanDuplicateQuestionsCommand extends Command
 
         foreach ($duplicates as $q) {
             $output->writeln("🗑️ Suppression : " . $q->getQuestion());
+
+            // suppression explicite des réponses associées
+            foreach ($q->getAnswers() as $a) {
+                $this->em->remove($a);
+            }
+
             $this->em->remove($q);
         }
 

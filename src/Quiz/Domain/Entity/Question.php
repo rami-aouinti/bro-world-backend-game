@@ -45,12 +45,12 @@ class Question implements EntityInterface
     ])]
     private ?string $question = null;
 
-    #[ORM\OneToMany(mappedBy: 'questionId', targetEntity: Answer::class, cascade: ['remove'], orphanRemoval: true)]
     #[Groups([
         'Question',
         'Question.answer',
     ])]
-    private Collection $answer;
+    #[ORM\OneToMany(mappedBy: 'questionId', targetEntity: Answer::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $answers;
 
     #[ORM\OneToMany(mappedBy: 'Question', targetEntity: GameQuestion::class)]
     #[Groups([
@@ -82,7 +82,7 @@ class Question implements EntityInterface
     public function __construct()
     {
         $this->id = $this->createUuid();
-        $this->answer = new ArrayCollection();
+        $this->answers = new ArrayCollection();
         $this->gameQuestions = new ArrayCollection();
         $this->medias = new ArrayCollection();
     }
@@ -132,9 +132,9 @@ class Question implements EntityInterface
     /**
      * @return Collection<int, Answer>
      */
-    public function getAnswer(): Collection
+    public function getAnswers(): Collection
     {
-        return $this->answer;
+        return $this->answers;
     }
 
     public function addAnswer(Answer $answer): self

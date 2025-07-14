@@ -50,13 +50,13 @@ class Answer implements EntityInterface
     ])]
     private ?bool $isTrue = null;
 
-    #[ORM\ManyToOne(inversedBy: 'answers')]
-    #[ORM\JoinColumn(name: 'question_id_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Groups([
         'Answer',
         'Answer.question_id',
     ])]
-    private ?Question $question_id = null;
+    #[ORM\ManyToOne(inversedBy: 'answers')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private ?Question $questionId = null;
 
     /**
      * @throws Throwable
@@ -102,13 +102,12 @@ class Answer implements EntityInterface
 
     public function getQuestionId(): ?Question
     {
-        return $this->question_id;
+        return $this->questionId;
     }
 
-    public function setQuestionId(?Question $question_id): self
+    public function setQuestionId(?Question $question): self
     {
-        $this->question_id = $question_id;
-
+        $this->questionId = $question;
         return $this;
     }
 }
