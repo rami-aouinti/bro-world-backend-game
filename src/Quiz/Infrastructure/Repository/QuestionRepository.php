@@ -58,8 +58,8 @@ class QuestionRepository extends ServiceEntityRepository
 
         $stmt = $conn->prepare($sql);
 
-        $stmt->bindValue('category', Uuid::fromString($category->getId())->getBytes(), \PDO::PARAM_LOB);
-        $stmt->bindValue('level', Uuid::fromString($level->getId())->getBytes(), \PDO::PARAM_LOB);
+        $stmt->bindValue('category', $category->getId(), \PDO::PARAM_LOB);
+        $stmt->bindValue('level', $level->getId(), \PDO::PARAM_LOB);
         $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
 
         $questionIds = $stmt->executeQuery()->fetchFirstColumn();
