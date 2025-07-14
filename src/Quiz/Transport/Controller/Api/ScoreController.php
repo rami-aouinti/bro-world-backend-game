@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Quiz\Transport\Controller;
+namespace App\Quiz\Transport\Controller\Api;
 
 use App\Quiz\Application\Service\ScoreManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
