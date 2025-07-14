@@ -41,7 +41,7 @@ readonly class SubmitScoreController
         $score->setUser(Uuid::fromString($userId));
 
         $game = new Game();
-        $game->setScore($score);
+        $score->setGame($game);
 
         foreach ($questions as $q) {
             $questionId = $q['questionId'] ?? null;
