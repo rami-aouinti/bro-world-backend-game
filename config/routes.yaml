@@ -3,6 +3,14 @@ quiz-controllers:
         path: ../src/Quiz/Transport/Controller/
         namespace: App\Quiz\Transport\Controller
     type: attribute
+    prefix: /
+    defaults:
+        _format: json
+quiz-api-controllers:
+    resource:
+        path: ../src/Quiz/Transport/Controller/Api/
+        namespace: App\Quiz\Transport\Controller\Api
+    type: attribute
     prefix: /api
     defaults:
         _format: json
