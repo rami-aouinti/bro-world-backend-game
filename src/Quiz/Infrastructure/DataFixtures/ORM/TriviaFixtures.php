@@ -34,8 +34,8 @@ class TriviaFixtures extends Fixture
         $client = HttpClient::create();
 
         foreach (self::LEVELS as $difficulty) {
-            for ($i = 9; $i < 33; $i++) {
-                $response = $client->request('GET', "https://opentdb.com/api.php?amount=20&category=$i&difficulty=$difficulty");
+            for ($i = 9; $i < 16; $i++) {
+                $response = $client->request('GET', "https://opentdb.com/api.php?amount=50&category=$i&difficulty=$difficulty");
                 $data = $response->toArray();
 
                 $level = $this->getOrCreateLevel($manager, ucfirst($difficulty));
