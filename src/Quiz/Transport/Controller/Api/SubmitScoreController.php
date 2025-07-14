@@ -28,7 +28,7 @@ readonly class SubmitScoreController
     #[Route('/platform/quiz/submit-score', name: 'submit_score', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $request->request->all();
 
         $userId = $data['userId'] ?? null;
         $scoreValue = $data['score'] ?? null;
