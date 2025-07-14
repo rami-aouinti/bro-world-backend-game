@@ -32,26 +32,28 @@ readonly class GetLeaderboardController
                 continue;
             }
 
+            // Initialiser le score même si 0
+            if (!isset($leaderboard[$userId])) {
+                $leaderboard[$userId] = [
+                    'userId' => $userId,
+                    'score' => 0,
+                ];
+            }
+
             foreach ($game->getGameQuestions() as $gameQuestion) {
                 if ($gameQuestion->isIsResponse()) {
-                    $difficulty = strtolower($gameQuestion->getQuestion()?->getLevel()?->getLabel());
+                    $difficulty = strtolower($gameQuestion->getQuestion()?->getLevel()->getLabel());
                     $weight = match ($difficulty) {
                         'medium' => 2,
                         'hard' => 3,
                         default => 1,
                     };
 
-                    if (!isset($leaderboard[$userId])) {
-                        $leaderboard[$userId] = [
-                            'userId' => $userId,
-                            'score' => 0,
-                        ];
-                    }
-
                     $leaderboard[$userId]['score'] += $weight;
                 }
             }
         }
+
 
         $leaderboard = array_values($leaderboard);
 
