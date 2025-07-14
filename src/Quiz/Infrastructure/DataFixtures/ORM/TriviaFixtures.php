@@ -67,7 +67,7 @@ class TriviaFixtures extends Fixture
                         }
                     }
 
-                    sleep(1); // délai léger pour éviter le rate limit
+                    sleep(3); // délai léger pour éviter le rate limit
 
                 } catch (TransportExceptionInterface $e) {
                     echo "Erreur HTTP : " . $e->getMessage();
