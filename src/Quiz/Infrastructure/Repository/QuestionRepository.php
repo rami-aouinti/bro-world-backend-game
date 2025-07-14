@@ -56,8 +56,9 @@ class QuestionRepository extends ServiceEntityRepository
     ';
 
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue('category', $category->getId());
-        $stmt->bindValue('level', $level->getId());
+
+        $stmt->bindValue('category', Uuid::fromString($category->getId())->getBytes(), \PDO::PARAM_LOB);
+        $stmt->bindValue('level', Uuid::fromString($level->getId())->getBytes(), \PDO::PARAM_LOB);
         $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
 
         $questionIds = $stmt->executeQuery()->fetchFirstColumn();
@@ -72,7 +73,6 @@ class QuestionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */
