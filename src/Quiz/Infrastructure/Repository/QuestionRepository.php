@@ -2,6 +2,8 @@
 
 namespace App\Quiz\Infrastructure\Repository;
 
+use App\Quiz\Domain\Entity\Category;
+use App\Quiz\Domain\Entity\Level;
 use App\Quiz\Domain\Entity\Question;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +39,19 @@ class QuestionRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findRandomByCategoryAndLevel(Category $category, Level $level, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.category = :category')
+            ->andWhere('q.level = :level')
+            ->setParameter('category', $category)
+            ->setParameter('level', $level)
+            ->orderBy('RAND()') // MySQL. Pour PostgreSQL, remplacer par "RANDOM()"
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
