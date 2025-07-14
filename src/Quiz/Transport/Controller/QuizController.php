@@ -45,6 +45,7 @@ readonly class QuizController
         $category = $this->em->getRepository(Category::class)->find(Uuid::fromString($categoryId));
         $level = $this->em->getRepository(Level::class)->find(Uuid::fromString($levelId));
 
+        dd($category, $level);
         if (!$category || !$level) {
             return new JsonResponse([
                 'error' => 'Invalid category or level.'
