@@ -34,34 +34,35 @@ class TriviaFixtures extends Fixture
         $client = HttpClient::create();
 
         foreach (self::LEVELS as $difficulty) {
-            $response = $client->request('GET', "https://opentdb.com/api.php?amount=50&difficulty=$difficulty&type=multiple");
-            $data = $response->toArray();
+            for ($i = 9; $i < 33; $i++) {
+                $response = $client->request('GET', "https://opentdb.com/api.php?amount=50&category=$i&difficulty=$difficulty");
+                $data = $response->toArray();
 
-            $level = $this->getOrCreateLevel($manager, ucfirst($difficulty));
+                $level = $this->getOrCreateLevel($manager, ucfirst($difficulty));
 
-            foreach ($data['results'] as $item) {
-                $translatedQuestion = $this->translate($item['question']);
-                $translatedCorrect = $this->translate($item['correct_answer']);
-                $translatedIncorrects = array_map([$this, 'translate'], $item['incorrect_answers']);
+                foreach ($data['results'] as $item) {
+                    $categoryName = html_entity_decode($item['category']);
+                    $category = $this->getOrCreateCategory($manager, $categoryName);
 
-                $categoryName = html_entity_decode($item['category']);
-                $category = $this->getOrCreateCategory($manager, $categoryName);
+                    $question = new Question();
+                    $question->setQuestion(html_entity_decode($item['question']));
+                    $question->setCategory($category);
+                    $question->setLevel($level);
+                    $manager->persist($question);
 
-                $question = new Question();
-                $question->setQuestion($translatedQuestion);
-                $question->setCategory($category);
-                $question->setLevel($level);
-                $manager->persist($question);
+                    // Mix answers
+                    $correctAnswer = html_entity_decode($item['correct_answer']);
+                    $incorrectAnswers = array_map('html_entity_decode', $item['incorrect_answers']);
+                    $allAnswers = array_merge($incorrectAnswers, [$correctAnswer]);
+                    shuffle($allAnswers);
 
-                $allAnswers = array_merge($translatedIncorrects, [$translatedCorrect]);
-                shuffle($allAnswers);
-
-                foreach ($allAnswers as $text) {
-                    $answer = new Answer();
-                    $answer->setAnswer($text);
-                    $answer->setIsTrue($text === $translatedCorrect);
-                    $answer->setQuestionId($question);
-                    $manager->persist($answer);
+                    foreach ($allAnswers as $text) {
+                        $answer = new Answer();
+                        $answer->setAnswer($text);
+                        $answer->setIsTrue($text === $correctAnswer);
+                        $answer->setQuestionId($question);
+                        $manager->persist($answer);
+                    }
                 }
             }
         }
@@ -95,30 +96,5 @@ class TriviaFixtures extends Fixture
         }
 
         return $level;
-    }
-
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
-    private function translate(string $text): string
-    {
-        $client = HttpClient::create();
-        $response = $client->request('POST', 'https://libretranslate.de/translate', [
-            'headers' => ['Content-Type' => 'application/json'],
-            'json' => [
-                'q' => html_entity_decode($text),
-                'source' => 'en',
-                'target' => 'fr',
-                'format' => 'text',
-            ],
-        ]);
-
-        $data = $response->toArray();
-
-        return $data['translatedText'] ?? $text;
     }
 }
