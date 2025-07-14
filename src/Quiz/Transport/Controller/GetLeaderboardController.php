@@ -32,16 +32,26 @@ readonly class GetLeaderboardController
                 continue;
             }
 
-            echo "User: $userId - Game: OK\n";
-
             foreach ($game->getGameQuestions() as $gameQuestion) {
-                $isResponse = $gameQuestion->isIsResponse() ? 'true' : 'false';
-                $label = $gameQuestion->getQuestion()?->getLevel()?->getLabel();
+                if ($gameQuestion->isIsResponse()) {
+                    $difficulty = strtolower($gameQuestion->getQuestion()?->getLevel()?->getLabel());
+                    $weight = match ($difficulty) {
+                        'medium' => 2,
+                        'hard' => 3,
+                        default => 1,
+                    };
 
-                echo " - Question: " . $gameQuestion->getQuestion()?->getId() . " / response: $isResponse / level: $label\n";
+                    if (!isset($leaderboard[$userId])) {
+                        $leaderboard[$userId] = [
+                            'userId' => $userId,
+                            'score' => 0,
+                        ];
+                    }
+
+                    $leaderboard[$userId]['score'] += $weight;
+                }
             }
         }
-
 
         $leaderboard = array_values($leaderboard);
 
