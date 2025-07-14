@@ -23,7 +23,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class ImportTriviaCommand extends Command
 {
     private const array LEVELS = ['easy', 'medium', 'hard'];
-    private const int QUESTIONS_PER_COMBO = 50;
+    private const int QUESTIONS_PER_COMBO = 20;
 
     public function __construct(private EntityManagerInterface $em)
     {
@@ -70,7 +70,7 @@ class ImportTriviaCommand extends Command
                 $category = $this->getOrCreateCategory($categoryName);
 
                 try {
-                    $url = sprintf('https://opentdb.com/api.php?amount=%d&category=%d&difficulty=%s&type=multiple', self::QUESTIONS_PER_COMBO, $categoryId, $difficulty);
+                    $url = sprintf('https://opentdb.com/api.php?amount=%d&category=%d&difficulty=%s', self::QUESTIONS_PER_COMBO, $categoryId, $difficulty);
                     $response = $client->request('GET', $url);
                     $data = $response->toArray();
 
