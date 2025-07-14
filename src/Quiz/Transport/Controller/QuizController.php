@@ -51,7 +51,7 @@ readonly class QuizController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $questions = $this->questionRepository->findRandomByCategoryAndLevel($category, $level);
+        $questions = $this->questionRepository->findRandomByCategoryAndLevelSimple($category, $level, 10);
 
         $data = [];
 

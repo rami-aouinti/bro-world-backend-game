@@ -43,38 +43,23 @@ class QuestionRepository extends ServiceEntityRepository
         }
     }
 
-    public function findRandomByCategoryAndLevel(Category $category, Level $level, int $limit = 10): array
+    public function findRandomByCategoryAndLevelSimple(Category $category, Level $level, int $limit = 10): array
     {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = '
-        SELECT q.id
-        FROM question q
-        WHERE q.category_id = :category
-        AND q.level_id = :level
-        ORDER BY RAND()
-        LIMIT :limit
-    ';
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bindValue('category', $category->getId(), \PDO::PARAM_LOB);
-        $stmt->bindValue('level', $level->getId(), \PDO::PARAM_LOB);
-        $stmt->bindValue('limit', $limit, \PDO::PARAM_INT);
-
-        $questionIds = $stmt->executeQuery()->fetchFirstColumn();
-
-        if (empty($questionIds)) {
-            return [];
-        }
-
-        return $this->createQueryBuilder('q')
-            ->where('q.id IN (:ids)')
-            ->setParameter('ids', $questionIds)
+        $qb = $this->createQueryBuilder('q')
+            ->andWhere('q.category = :category')
+            ->andWhere('q.level = :level')
+            ->setParameter('category', $category)
+            ->setParameter('level', $level)
             ->getQuery()
             ->getResult();
+
+        // Shuffle côté PHP
+        shuffle($qb);
+
+        return array_slice($qb, 0, $limit);
     }
-//    /**
+
+    //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */
 //    public function findByExampleField($value): array
