@@ -44,7 +44,7 @@ class GameQuestion implements EntityInterface
     private ?bool $isResponse = null;
 
     #[ORM\ManyToOne(inversedBy: 'Question_id')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups([
         'GameQuestion',
         'GameQuestion.game',
