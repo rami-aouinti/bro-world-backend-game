@@ -48,8 +48,8 @@ class QuestionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('q')
             ->andWhere('q.category = :category')
             ->andWhere('q.level = :level')
-            ->setParameter('category', $category->getId())
-            ->setParameter('level', $level->getId())
+            ->setParameter('category', $category)
+            ->setParameter('level', $level)
             ->getQuery()
             ->getResult();
 

@@ -55,7 +55,8 @@ readonly class QuizController
             'category' => $category,
             'level' => $level
         ]);
-
+        shuffle($questions);
+        $questions = array_slice($questions, 0, 10);
         $data = [];
 
         foreach ($questions as $question) {
