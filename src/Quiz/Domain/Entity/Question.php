@@ -137,28 +137,6 @@ class Question implements EntityInterface
         return $this->answers;
     }
 
-    public function addAnswer(Answer $answer): self
-    {
-        if (!$this->answer->contains($answer)) {
-            $this->answer->add($answer);
-            $answer->setQuestionId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAnswer(Answer $answer): self
-    {
-        if ($this->answer->removeElement($answer)) {
-            // set the owning side to null (unless already changed)
-            if ($answer->getQuestionId() === $this) {
-                $answer->setQuestionId(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, GameQuestion>
      */
