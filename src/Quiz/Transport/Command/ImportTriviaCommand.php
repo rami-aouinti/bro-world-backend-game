@@ -26,27 +26,47 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class ImportTriviaCommand extends Command
 {
     private const array LEVELS = ['easy', 'medium', 'hard'];
-    private const int QUESTIONS_PER_COMBO = 10;
+    private const int QUESTIONS_PER_COMBO = 50;
 
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
         parent::__construct();
     }
 
-    /**
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
+    protected function configure(): void
+    {
+        $this
+            ->addOption('category', null, InputOption::VALUE_OPTIONAL, 'Name of category (e.g., "Science")')
+            ->addOption('difficulty', null, InputOption::VALUE_OPTIONAL, 'Difficulty level (easy|medium|hard)');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = HttpClient::create();
-        $output->writeln('<info>Fetching categories...</info>');
-        $categories = $this->fetchTriviaCategories($client);
+        $allCategories = $this->fetchTriviaCategories($client);
 
-        foreach (self::LEVELS as $difficulty) {
-            foreach ($categories as $categoryId => $categoryName) {
+        $categoryFilter = $input->getOption('category');
+        $difficultyFilter = $input->getOption('difficulty');
+
+        // Appliquer le filtre de catégorie si spécifié
+        if ($categoryFilter) {
+            $categoryId = array_search(ucfirst(strtolower($categoryFilter)), array_map('ucfirst', $allCategories), true);
+            if ($categoryId === false) {
+                $output->writeln("<error>Unknown category: $categoryFilter</error>");
+                return Command::FAILURE;
+            }
+            $allCategories = [$categoryId => $allCategories[$categoryId]];
+        }
+
+        // Appliquer le filtre de niveau si spécifié
+        $levels = $difficultyFilter ? [strtolower($difficultyFilter)] : self::LEVELS;
+        if ($difficultyFilter && !in_array(strtolower($difficultyFilter), self::LEVELS, true)) {
+            $output->writeln("<error>Invalid difficulty: $difficultyFilter</error>");
+            return Command::FAILURE;
+        }
+
+        foreach ($levels as $difficulty) {
+            foreach ($allCategories as $categoryId => $categoryName) {
                 $output->writeln("Importing <comment>$difficulty</comment> questions for category <info>$categoryName</info>");
 
                 $level = $this->getOrCreateLevel(ucfirst($difficulty));
@@ -57,8 +77,8 @@ class ImportTriviaCommand extends Command
                     $response = $client->request('GET', $url);
                     $data = $response->toArray();
 
-                    if (empty($data['results'])) {
-                        $output->writeln("<comment>No questions found for this category/difficulty.</comment>");
+                    if (!isset($data['results']) || empty($data['results'])) {
+                        $output->writeln("<comment>No questions found for this combo.</comment>");
                         continue;
                     }
 
@@ -84,8 +104,7 @@ class ImportTriviaCommand extends Command
                     }
 
                     $this->em->flush();
-                    sleep(1); // Evite l'erreur 429
-
+                    sleep(5); // éviter les erreurs 429
                 } catch (TransportExceptionInterface $e) {
                     $output->writeln("<error>HTTP error: {$e->getMessage()}</error>");
                     continue;
@@ -93,7 +112,7 @@ class ImportTriviaCommand extends Command
             }
         }
 
-        $output->writeln('<info>Import completed successfully!</info>');
+        $output->writeln('<info>Trivia import completed!</info>');
         return Command::SUCCESS;
     }
 
