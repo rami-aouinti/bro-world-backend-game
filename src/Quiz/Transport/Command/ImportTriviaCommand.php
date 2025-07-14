@@ -101,7 +101,7 @@ class ImportTriviaCommand extends Command
                     }
 
                     $this->em->flush();
-                    sleep(6); // éviter les erreurs 429
+                    sleep(7); // éviter les erreurs 429
                 } catch (TransportExceptionInterface $e) {
                     $output->writeln("<error>HTTP error: {$e->getMessage()}</error>");
                     continue;
