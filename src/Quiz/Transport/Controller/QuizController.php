@@ -51,7 +51,10 @@ readonly class QuizController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $questions = $this->questionRepository->findRandomByCategoryAndLevelSimple($category, $level, 10);
+        $questions = $this->questionRepository->findBy([
+            'category' => $category,
+            'level' => $level
+        ]);
 
         $data = [];
 
@@ -62,7 +65,7 @@ readonly class QuizController
                 $answers[] = [
                     'id' => $answer->getId(),
                     'answer' => $answer->getAnswer(),
-                    'isTrue' => $answer->isTrue(),
+                    'isTrue' => $answer->isIsTrue(),
                 ];
             }
 
