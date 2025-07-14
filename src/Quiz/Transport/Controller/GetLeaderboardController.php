@@ -2,21 +2,37 @@
 
 namespace App\Quiz\Transport\Controller;
 
+use App\Quiz\Application\ApiProxy\UserProxy;
 use App\Quiz\Domain\Entity\Score;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[AsController]
 readonly class GetLeaderboardController
 {
     public function __construct(
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private UserProxy $userProxy
     ) {
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws InvalidArgumentException
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/platform/quiz/leaderboard', name: 'api_quiz_leaderboard', methods: ['GET'])]
     public function __invoke(): JsonResponse
     {
@@ -32,10 +48,9 @@ readonly class GetLeaderboardController
                 continue;
             }
 
-            // Initialiser le score même si 0
             if (!isset($leaderboard[$userId])) {
                 $leaderboard[$userId] = [
-                    'userId' => $userId,
+                    'userId' => $this->userProxy->searchUser($userId),
                     'score' => 0,
                 ];
             }
