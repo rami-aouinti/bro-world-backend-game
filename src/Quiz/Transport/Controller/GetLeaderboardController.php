@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Quiz\Transport\Controller\Api;
+namespace App\Quiz\Transport\Controller;
 
 use App\Quiz\Domain\Entity\Score;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 readonly class GetLeaderboardController
