@@ -24,10 +24,12 @@ readonly class GetFinalScoreController
     #[Route('/platform/quiz/final-score', name: 'api_quiz_final_score', methods: ['GET'])]
     public function __invoke(SymfonyUser $symfonyUser, Request $request): JsonResponse
     {
+        $userId = Uuid::fromString($symfonyUser->getUserIdentifier());
 
-        $scores = $this->em->getRepository(Score::class)->findBy(['user' => Uuid::fromString($symfonyUser->getUserIdentifier())]);
+        $scores = $this->em->getRepository(Score::class)->findBy(['user' => $userId]);
 
         $finalScore = 0;
+        $totalQuestions = 0;
 
         foreach ($scores as $score) {
             $game = $score->getGame();
@@ -36,7 +38,7 @@ readonly class GetFinalScoreController
             }
 
             foreach ($game->getGameQuestions() as $gameQuestion) {
-                /** @var GameQuestion $gameQuestion */
+                $totalQuestions++;
                 if ($gameQuestion->isIsResponse()) {
                     $difficulty = strtolower($gameQuestion->getQuestion()?->getLevel()->getLabel());
                     $weight = match ($difficulty) {
@@ -44,15 +46,15 @@ readonly class GetFinalScoreController
                         'hard' => 3,
                         default => 1,
                     };
-
                     $finalScore += $weight;
                 }
             }
         }
 
         return new JsonResponse([
-            'userId' => $symfonyUser->getUserIdentifier(),
-            'finalScore' => $finalScore
+            'userId' => $userId->toString(),
+            'finalScore' => $finalScore,
+            'questionsAnswered' => $totalQuestions
         ], Response::HTTP_OK);
     }
 }
