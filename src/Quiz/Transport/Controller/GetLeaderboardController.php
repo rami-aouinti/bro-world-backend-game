@@ -34,7 +34,7 @@ readonly class GetLeaderboardController
 
             foreach ($game->getGameQuestions() as $gameQuestion) {
                 if ($gameQuestion->isIsResponse()) {
-                    $difficulty = strtolower($gameQuestion->getQuestion()?->getLevel()->getLabel());
+                    $difficulty = strtolower($gameQuestion->getQuestion()?->getLevel()?->getLabel());
                     $weight = match ($difficulty) {
                         'medium' => 2,
                         'hard' => 3,
@@ -53,12 +53,13 @@ readonly class GetLeaderboardController
             }
         }
 
+        $leaderboard = array_values($leaderboard);
+
         usort($leaderboard, static fn($a, $b) => $b['score'] <=> $a['score']);
 
         return new JsonResponse([
             'count' => count($leaderboard),
             'leaderboard' => $leaderboard,
         ], Response::HTTP_OK);
-
     }
 }
