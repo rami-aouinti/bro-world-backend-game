@@ -30,18 +30,22 @@ class Category implements EntityInterface
         nullable: false,
     )]
     #[Groups([
-        'Quiz',
-        'Quiz.id',
+        'Category',
+        'Category.id',
     ])]
     private UuidInterface $id;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Groups([
+        'Category',
+        'Category.name',
+    ])]
     private string $name;
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Groups([
-        'Quiz',
-        'Quiz.logo'
+        'Category',
+        'Category.logo'
     ])]
     private ?string $logo = null;
 

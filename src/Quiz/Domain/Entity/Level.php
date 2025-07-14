@@ -30,12 +30,16 @@ class Level implements EntityInterface
         nullable: false,
     )]
     #[Groups([
-        'Quiz',
-        'Quiz.id',
+        'Level',
+        'Level.id',
     ])]
     private UuidInterface $id;
 
     #[ORM\Column(type: 'string', length: 50)]
+    #[Groups([
+        'Level',
+        'Level.label',
+    ])]
     private string $label;
 
     /**
