@@ -23,7 +23,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class ImportTriviaCommand extends Command
 {
     private const array LEVELS = ['easy', 'medium', 'hard'];
-    private const int QUESTIONS_PER_COMBO = 20;
+    private const int QUESTIONS_PER_COMBO = 10;
 
     public function __construct(private EntityManagerInterface $em)
     {
@@ -101,7 +101,7 @@ class ImportTriviaCommand extends Command
                     }
 
                     $this->em->flush();
-                    sleep(7); // éviter les erreurs 429
+                    sleep(5); // éviter les erreurs 429
                 } catch (TransportExceptionInterface $e) {
                     $output->writeln("<error>HTTP error: {$e->getMessage()}</error>");
                     continue;
