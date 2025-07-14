@@ -61,7 +61,7 @@ readonly class SubmitScoreController
             $gameQuestion = new GameQuestion();
             $gameQuestion->setQuestion($question);
             $gameQuestion->setIsResponse((bool) $isCorrect);
-
+            $gameQuestion->setGame($game);
             // Ajoute proprement la relation bidirectionnelle
             $game->addGameQuestion($gameQuestion);
 
