@@ -44,12 +44,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/General/Domain/Entity'
                         prefix: 'App\General\Domain\Entity'
                         alias: General
-                    Configuration:
+                    Quiz:
                         type: attribute
                         is_bundle: false
-                        dir: '%kernel.project_dir%/src/Configuration/Domain/Entity'
-                        prefix: 'App\Configuration\Domain\Entity'
-                        alias: Configuration
+                        dir: '%kernel.project_dir%/src/Quiz/Domain/Entity'
+                        prefix: 'App\Quiz\Domain\Entity'
+                        alias: Quiz
                 dql:
                     datetime_functions:
                         datesub: DoctrineExtensions\Query\Mysql\DateSub

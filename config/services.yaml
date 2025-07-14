@@ -120,6 +120,9 @@ when@dev:
             autowire: true
             autoconfigure: true
 
+        App\Quiz\Infrastructure\DataFixtures\:
+            resource: '../src/Quiz/Infrastructure/DataFixtures/*'
+
         App\Tests\TestCase\:
             resource: '../tests/TestCase/*'
 
