@@ -20,8 +20,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 readonly class SubmitScoreController
 {
     public function __construct(
-        private EntityManagerInterface $em,
-        private SerializerInterface    $serializer,
+        private EntityManagerInterface $em
     ) {
     }
 
@@ -60,9 +59,11 @@ readonly class SubmitScoreController
             }
 
             $gameQuestion = new GameQuestion();
-            $gameQuestion->setGame($game);
             $gameQuestion->setQuestion($question);
-            $gameQuestion->setIsResponse((bool)$isCorrect);
+            $gameQuestion->setIsResponse((bool) $isCorrect);
+
+            // Ajoute proprement la relation bidirectionnelle
+            $game->addGameQuestion($gameQuestion);
 
             $this->em->persist($gameQuestion);
         }
