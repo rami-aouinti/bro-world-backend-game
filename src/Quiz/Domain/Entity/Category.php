@@ -38,6 +38,13 @@ class Category implements EntityInterface
     #[ORM\Column(type: 'string', length: 100)]
     private string $name;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups([
+        'Quiz',
+        'Quiz.logo'
+    ])]
+    private ?string $logo = null;
+
     /**
      * @throws Throwable
      */
@@ -60,5 +67,15 @@ class Category implements EntityInterface
     {
         $this->name = $name;
         return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?string $logo): void
+    {
+        $this->logo = $logo;
     }
 }

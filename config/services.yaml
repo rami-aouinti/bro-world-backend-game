@@ -8,6 +8,7 @@ parameters:
     app.notifications.email_sender: admin@localhost
     api_media_base_url: '%env(API_MEDIA_BASE_URL)%'
     game_directory: '%kernel.project_dir%/public/uploads/game'
+    logo_directory: '%kernel.project_dir%/public/uploads/logo'
 
 services:
     # default configuration for services in *this* file
