@@ -68,6 +68,15 @@ class Question implements EntityInterface
     private Level $level;
 
     /**
+     * @var Collection<int, Media>
+     */
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Media::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups([
+        'Question',
+    ])]
+    private Collection $medias;
+
+    /**
      * @throws Throwable
      */
     public function __construct()
@@ -75,6 +84,7 @@ class Question implements EntityInterface
         $this->id = $this->createUuid();
         $this->answer = new ArrayCollection();
         $this->gameQuestions = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): string
@@ -173,6 +183,33 @@ class Question implements EntityInterface
             // set the owning side to null (unless already changed)
             if ($gameQuestion->getQuestion() === $this) {
                 $gameQuestion->setQuestion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMediaEntities(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): self
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias[] = $media;
+            $media->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): self
+    {
+        if ($this->medias->removeElement($media)) {
+            // break the association
+            if ($media->getQuestion() === $this) {
+                $media->setPost(null);
             }
         }
 
