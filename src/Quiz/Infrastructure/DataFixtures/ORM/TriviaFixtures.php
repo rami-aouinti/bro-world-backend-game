@@ -64,7 +64,7 @@ class TriviaFixtures extends Fixture
                         $manager->persist($answer);
                     }
                 }
-                sleep(3);
+                sleep(4);
             }
         }
 
