@@ -43,12 +43,12 @@ class Score implements EntityInterface
     ])]
     private ?string $score = null;
 
-    #[ORM\OneToOne(mappedBy: 'score', cascade: ['persist', 'remove'])]
     #[Groups([
         'Score',
         'Score.game',
     ])]
-    #[ORM\JoinColumn(name: "score_id", referencedColumnName: "id")]
+    #[ORM\OneToOne(inversedBy: 'score', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Game $game = null;
 
     #[ORM\Column(type: 'uuid')]

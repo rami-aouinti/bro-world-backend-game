@@ -33,13 +33,11 @@ class Game implements EntityInterface
     ])]
     private UuidInterface $id;
 
-
-    #[ORM\OneToOne(inversedBy: 'game', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
     #[Groups([
         'Game',
         'Game.score',
     ])]
+    #[ORM\OneToOne(mappedBy: 'game', targetEntity: Score::class, cascade: ['persist', 'remove'])]
     private ?Score $score = null;
 
     #[ORM\OneToMany(mappedBy: 'Game', targetEntity: GameQuestion::class)]
