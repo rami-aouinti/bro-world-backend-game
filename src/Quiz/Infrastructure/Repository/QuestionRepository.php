@@ -42,9 +42,6 @@ class QuestionRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function findRandomByCategoryAndLevel(Category $category, Level $level, int $limit = 10): array
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -54,7 +51,7 @@ class QuestionRepository extends ServiceEntityRepository
         FROM question q
         WHERE q.category_id = :category
         AND q.level_id = :level
-        ORDER BY RANDOM()
+        ORDER BY RAND()
         LIMIT :limit
     ';
 
