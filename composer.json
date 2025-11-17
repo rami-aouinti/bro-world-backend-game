@@ -1,5 +1,5 @@
 {
-	"name": "systemsdk/docker-symfony-api",
+	"name": "bro-world/game-microservice",
 	"type": "project",
 	"description": "JSON REST API",
 	"keywords": [
@@ -13,20 +13,14 @@
 		"RabbitMQ",
 		"Elasticsearch"
 	],
-	"homepage": "https://github.com/systemsdk/docker-symfony-api",
-	"version": "v3.4.5",
-	"license": "MIT",
+	"homepage": "https://github.com/rami-aouinti/bro-world-backend-game",
+	"version": "v1.0.0",
+	"license": "proprietary",
 	"authors": [
 		{
-			"name": "Dmitriy Kravtsov",
-			"email": "dmytro.kravtsov@systemsdk.com",
-			"homepage": "https://github.com/systemsdk",
-			"role": "Developer"
-		},
-		{
-			"name": "Tarmo Leppänen",
-			"email": "tarmo.leppanen@protacon.com",
-			"homepage": "https://github.com/tarlepp",
+			"name": "Rami Aouinti",
+			"email": "rami.aouinti@gmail.com",
+			"homepage": "https://github.com/rami-aouinti",
 			"role": "Developer"
 		}
 	],
@@ -56,42 +50,42 @@
 		"nelmio/cors-bundle": "^2.5",
 		"phpdocumentor/reflection-docblock": "^5.6.2",
 		"ramsey/uuid-doctrine": "^2.1",
-		"symfony/amqp-messenger": "7.2.*",
-		"symfony/asset": "7.2.*",
-		"symfony/asset-mapper": "7.2.*",
-		"symfony/config": "7.2.*",
-		"symfony/console": "7.2.*",
-		"symfony/doctrine-bridge": "7.2.*",
-		"symfony/doctrine-messenger": "7.2.*",
-		"symfony/dotenv": "7.2.*",
-		"symfony/expression-language": "7.2.*",
+		"symfony/amqp-messenger": "^7.3.7",
+		"symfony/asset": "^7.3.7",
+		"symfony/asset-mapper": "^7.3.7",
+		"symfony/config": "^7.3.7",
+		"symfony/console": "^7.3.7",
+		"symfony/doctrine-bridge": "^7.3.7",
+		"symfony/doctrine-messenger": "^7.3.7",
+		"symfony/dotenv": "^7.3.7",
+		"symfony/expression-language": "^7.3.7",
 		"symfony/flex": "^2.8.1",
-		"symfony/form": "7.2.*",
-		"symfony/framework-bundle": "7.2.*",
-		"symfony/http-client": "7.2.*",
-		"symfony/intl": "7.2.*",
-		"symfony/mailer": "7.2.*",
+		"symfony/form": "^7.3.7",
+		"symfony/framework-bundle": "^7.3.7",
+		"symfony/http-client": "^7.3.7",
+		"symfony/intl": "^7.3.7",
+		"symfony/mailer": "^7.3.7",
 		"symfony/mercure-bundle": "^0.3.9",
-		"symfony/messenger": "7.2.*",
-		"symfony/mime": "7.2.*",
+		"symfony/messenger": "^7.3.7",
+		"symfony/mime": "^7.3.7",
 		"symfony/monolog-bundle": "^3.10",
-		"symfony/notifier": "7.2.*",
-		"symfony/process": "7.2.*",
-		"symfony/property-access": "7.2.*",
-		"symfony/property-info": "7.2.*",
+		"symfony/notifier": "^7.3.7",
+		"symfony/process": "^7.3.7",
+		"symfony/property-access": "^7.3.7",
+		"symfony/property-info": "^7.3.7",
 		"symfony/proxy-manager-bridge": "6.4.*",
-		"symfony/routing": "7.2.*",
-		"symfony/runtime": "7.2.*",
-		"symfony/security-bundle": "7.2.*",
-		"symfony/serializer": "7.2.*",
+		"symfony/routing": "^7.3.7",
+		"symfony/runtime": "^7.3.7",
+		"symfony/security-bundle": "^7.3.7",
+		"symfony/serializer": "^7.3.7",
 		"symfony/stimulus-bundle": "^2.27.0",
-		"symfony/string": "7.2.*",
-		"symfony/translation": "7.2.*",
-		"symfony/twig-bundle": "7.2.*",
+		"symfony/string": "^7.3.7",
+		"symfony/translation": "^7.3.7",
+		"symfony/twig-bundle": "^7.3.7",
 		"symfony/ux-turbo": "^2.27.0",
-		"symfony/validator": "7.2.*",
-		"symfony/web-link": "7.2.*",
-		"symfony/yaml": "7.2.*",
+		"symfony/validator": "^7.3.7",
+		"symfony/web-link": "^7.3.7",
+		"symfony/yaml": "^7.3.7",
 		"twig/extra-bundle": "^2.12|^3.21",
 		"twig/twig": "^2.12|^3.21.1"
 	},
@@ -105,13 +99,13 @@
 		"doctrine/doctrine-fixtures-bundle": "^4.1",
 		"systemsdk/easy-log-bundle": "2.0.*",
 		"roave/security-advisories": "dev-latest",
-		"symfony/browser-kit": "7.2.*",
-		"symfony/debug-bundle": "7.2.*",
+		"symfony/browser-kit": "^7.3.7",
+		"symfony/debug-bundle": "^7.3.7",
 		"symfony/maker-bundle": "^1.64.0",
 		"symfony/requirements-checker": "^2.0.3",
-		"symfony/stopwatch": "7.2.*",
-		"symfony/var-dumper": "7.2.*",
-		"symfony/web-profiler-bundle": "7.2.*"
+		"symfony/stopwatch": "^7.3.7",
+		"symfony/var-dumper": "^7.3.7",
+		"symfony/web-profiler-bundle": "^7.3.7"
 	},
 	"replace": {
 		"symfony/polyfill-ctype": "*",
@@ -145,7 +139,7 @@
 		"projectTitle": "Docker Symfony API",
 		"symfony": {
 			"allow-contrib": true,
-			"require": "7.2.*"
+			"require": "7.3.*"
 		}
 	},
 	"autoload": {
@@ -206,6 +200,6 @@
 		}
 	},
 	"support": {
-		"issues": "https://github.com/systemsdk/docker-symfony-api/issues"
+		"issues": "https://github.com/rami-aouinti/bro-world-backend-game/issues"
 	}
 }
