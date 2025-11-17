@@ -1,27 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Quiz\Transport\Controller\Api;
 
-
-use App\Quiz\Domain\Entity\Game;
-use App\Quiz\Domain\Entity\GameQuestion;
-use App\Quiz\Domain\Entity\Question;
-use App\Quiz\Domain\Entity\Score;
-use Doctrine\ORM\EntityManagerInterface;
-use Ramsey\Uuid\Uuid;
+use App\Quiz\Application\Service\ScoreLifecycleService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[AsController]
 readonly class SubmitScoreController
 {
-    public function __construct(
-        private EntityManagerInterface $em
-    ) {
+    public function __construct(private ScoreLifecycleService $scoreLifecycleService)
+    {
     }
 
     #[Route('/platform/quiz/submit-score', name: 'submit_score', methods: ['POST'])]
@@ -36,39 +30,21 @@ readonly class SubmitScoreController
         if (!$userId || !is_numeric($scoreValue) || !is_array($questions)) {
             return new JsonResponse(['error' => 'Invalid payload'], Response::HTTP_BAD_REQUEST);
         }
-        $score = new Score();
-        $score->setScore((string) $scoreValue);
-        $score->setUser(Uuid::fromString($userId));
 
-        $game = new Game();
-        $score->setGame($game);
-
-        foreach ($questions as $q) {
-            $questionId = $q['questionId'] ?? null;
-            $isCorrect = $q['isCorrect'] ?? false;
-
-            if (!$questionId) {
+        $normalizedQuestions = [];
+        foreach ($questions as $question) {
+            if (!isset($question['questionId'])) {
                 continue;
             }
 
-            $question = $this->em->getRepository(Question::class)->find(Uuid::fromString($questionId));
-            if (!$question) {
-                continue;
-            }
-
-            $gameQuestion = new GameQuestion();
-            $gameQuestion->setQuestion($question);
-            $gameQuestion->setIsResponse((bool)$isCorrect);
-
-            $game->addGameQuestion($gameQuestion); // ça gère aussi le setGame()
-
-            $this->em->persist($gameQuestion);
+            $normalizedQuestions[] = [
+                'questionId' => (string) $question['questionId'],
+                'isCorrect' => (bool) ($question['isCorrect'] ?? false),
+            ];
         }
 
-        $this->em->persist($score);
-        $this->em->persist($game);
-        $this->em->flush();
+        $this->scoreLifecycleService->createScore((string) $userId, (int) $scoreValue, $normalizedQuestions);
 
-        return new JsonResponse(['message' => 'Score saved successfully'], Response::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Score creation scheduled'], Response::HTTP_ACCEPTED);
     }
 }

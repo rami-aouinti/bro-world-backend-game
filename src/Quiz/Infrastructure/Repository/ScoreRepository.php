@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Quiz\Infrastructure\Repository;
 
 use App\Quiz\Domain\Entity\Score;
@@ -38,41 +40,15 @@ class ScoreRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function findAllScoresDESC()
+
+    /**
+     * @return Score[]
+     */
+    public function findAllOrderedByScoreDesc(): array
     {
-        $entityManager = $this->getEntityManager();
-
-        $query = $entityManager->createQuery(
-            'SELECT s
-            FROM App\Quiz\DomainEntity\Score s
-            ORDER BY s.Score DESC'
-        );
-
-        return $query->getResult();
+        return $this->createQueryBuilder('score')
+            ->orderBy('score.score', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
-
-    //    /**
-    //     * @return Score[] Returns an array of Score objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Score
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
