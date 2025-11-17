@@ -8,9 +8,7 @@ use App\Quiz\Application\Messenger\Message\DeleteScoreMessage;
 use App\Quiz\Application\Service\LeaderboardService;
 use App\Quiz\Infrastructure\Repository\ScoreRepository;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(bus: 'command_bus')]
 final class DeleteScoreMessageHandler
 {
     public function __construct(

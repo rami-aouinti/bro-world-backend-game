@@ -1,6 +1,6 @@
 <?php
 
-return [
+$bundles = [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
@@ -25,3 +25,9 @@ return [
     Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
     Symfony\Bundle\MercureBundle\MercureBundle::class => ['all' => true],
 ];
+
+if (class_exists(\Symfony\Bundle\MessengerBundle\MessengerBundle::class)) {
+    $bundles[\Symfony\Bundle\MessengerBundle\MessengerBundle::class] = ['all' => true];
+}
+
+return $bundles;
