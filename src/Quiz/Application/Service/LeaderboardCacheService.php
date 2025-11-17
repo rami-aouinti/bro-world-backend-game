@@ -17,7 +17,7 @@ class LeaderboardCacheService
     private const DEFAULT_TTL = 300;
 
     public function __construct(
-        #[Autowire(service: 'cache.leaderboard.cache')]
+        #[Autowire(service: 'leaderboard.cache')]
         private CacheInterface $leaderboardCache,
     ) {
     }
