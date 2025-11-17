@@ -32,7 +32,7 @@ framework:
                     exchange:
                         name: job_high
                     queues:
-                        messages_job_high: ~
+                        messages_game_high: ~
                 # default configuration
                 retry_strategy:
                     max_retries: 3
