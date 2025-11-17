@@ -2,7 +2,7 @@
 
 namespace App\Quiz\Transport\Controller\Api;
 
-use App\General\Infrastructure\ValueObject\SymfonyUser;
+use Bro\WorldCoreBundle\Infrastructure\ValueObject\SymfonyUser;
 use App\Quiz\Domain\Entity\Score;
 use App\Quiz\Domain\Entity\GameQuestion;
 use Doctrine\ORM\EntityManagerInterface;

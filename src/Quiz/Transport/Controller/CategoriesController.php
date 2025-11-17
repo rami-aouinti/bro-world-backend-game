@@ -2,7 +2,7 @@
 
 namespace App\Quiz\Transport\Controller;
 
-use App\General\Domain\Utils\JSON;
+use Bro\WorldCoreBundle\Domain\Utils\JSON;
 use App\Quiz\Domain\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;

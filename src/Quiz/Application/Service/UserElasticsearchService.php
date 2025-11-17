@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Quiz\Application\Service;
 
-use App\General\Domain\Service\Interfaces\ElasticsearchServiceInterface;
+use Bro\WorldCoreBundle\Domain\Service\Interfaces\ElasticsearchServiceInterface;
 use App\Quiz\Application\Service\Interfaces\UserElasticsearchServiceInterface;
 
 /**
