@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Quiz\Application\Service;
 
-use App\Quiz\Application\Messenger\Handler\CreateScoreMessageHandler;
-use App\Quiz\Application\Messenger\Handler\DeleteScoreMessageHandler;
-use App\Quiz\Application\Messenger\Handler\UpdateScoreMessageHandler;
 use App\Quiz\Application\Messenger\Message\CreateScoreMessage;
 use App\Quiz\Application\Messenger\Message\DeleteScoreMessage;
 use App\Quiz\Application\Messenger\Message\UpdateScoreMessage;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Coordinates score creation, updates and deletions via the dedicated handlers.
@@ -17,9 +16,8 @@ use App\Quiz\Application\Messenger\Message\UpdateScoreMessage;
 final class ScoreLifecycleService
 {
     public function __construct(
-        private readonly CreateScoreMessageHandler $createScoreMessageHandler,
-        private readonly UpdateScoreMessageHandler $updateScoreMessageHandler,
-        private readonly DeleteScoreMessageHandler $deleteScoreMessageHandler,
+        #[Autowire(service: 'messenger.bus.command_bus')]
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -28,16 +26,16 @@ final class ScoreLifecycleService
      */
     public function createScore(string $userId, int $scoreValue, array $questions): void
     {
-        ($this->createScoreMessageHandler)(new CreateScoreMessage($userId, $scoreValue, $questions));
+        $this->messageBus->dispatch(new CreateScoreMessage($userId, $scoreValue, $questions));
     }
 
     public function incrementScore(string $scoreId, int $increment): void
     {
-        ($this->updateScoreMessageHandler)(new UpdateScoreMessage($scoreId, $increment));
+        $this->messageBus->dispatch(new UpdateScoreMessage($scoreId, $increment));
     }
 
     public function deleteScore(string $scoreId): void
     {
-        ($this->deleteScoreMessageHandler)(new DeleteScoreMessage($scoreId));
+        $this->messageBus->dispatch(new DeleteScoreMessage($scoreId));
     }
 }

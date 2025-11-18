@@ -12,7 +12,9 @@ use App\Quiz\Domain\Entity\Question;
 use App\Quiz\Domain\Entity\Score;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler(bus: 'command_bus')]
 final class CreateScoreMessageHandler
 {
     public function __construct(

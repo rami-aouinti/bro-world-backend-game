@@ -8,7 +8,9 @@ use App\Quiz\Application\Messenger\Message\UpdateScoreMessage;
 use App\Quiz\Application\Service\LeaderboardService;
 use App\Quiz\Infrastructure\Repository\ScoreRepository;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler(bus: 'command_bus')]
 final class UpdateScoreMessageHandler
 {
     public function __construct(
